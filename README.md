@@ -1,6 +1,7 @@
-<p align = "center">
-  # 🛣️ StreetResolve
-<p/>
+<p align="center">
+  <h1>🛣️ StreetResolve</h1>
+  <img src="path/to/your-image.png" alt="StreetResolve Screenshot" width="400"/>
+</p>
 
 StreetResolve is a simple web application that allows users to report potholes by submitting details like location, description, severity, image, reporter name, and date. The system displays all submitted reports in a dashboard where statuses can be updated: **Reported → In Progress → Fixed**.
 
