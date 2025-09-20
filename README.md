@@ -33,7 +33,7 @@ StreetResolve is a simple web application that allows users to report potholes b
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/your-username/streetresolve.git
+git clone https://github.com/atharv2515/StreetResolve.git
 cd streetresolve
 ```
 
