@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pothole Reporting System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .loader {
+            border: 5px solid #f3f3f3; border-radius: 50%; border-top: 5px solid #3498db;
+            width: 50px; height: 50px; animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .modal {
+            display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%;
+            height: 100%; overflow: auto; background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe; margin: 15% auto; padding: 20px;
+            border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <header class="bg-white shadow-md rounded-lg p-6 mb-8">
+            <h1 class="text-3xl font-bold text-center text-gray-700">StreetResolve</h1>
+            <p class="text-center text-gray-500 mt-2">See It. Report It. Resolve It !</p>
+        </header>
+
+        <main class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Reporting Form Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Report a New Pothole</h2>
+                <form id="report-form">
+                    <div class="mb-4">
+                        <label for="location" class="block text-sm font-medium text-gray-600 mb-1">Location / Address</label>
+                        <input type="text" id="location" name="location" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="e.g., Main Street & 1st Ave" required>
+                        <button type="button" id="get-location-btn" class="mt-2 text-sm text-blue-600 hover:underline">Get Current Location</button>
+                    </div>
+
+                    <!-- --- CHANGE: Added Name and Date inputs --- -->
+                    <div class="mb-4">
+                        <label for="reporterName" class="block text-sm font-medium text-gray-600 mb-1">Your Name</label>
+                        <input type="text" id="reporterName" name="reporterName" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Enter your full name" required>
+                    </div>
+                     <div class="mb-4">
+                        <label for="reportDate" class="block text-sm font-medium text-gray-600 mb-1">Date</label>
+                        <input type="date" id="reportDate" name="reportDate" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                    </div>
+                    <!-- --- END CHANGE --- -->
+
+                    <div class="mb-4">
+                        <label for="description" class="block text-sm font-medium text-gray-600 mb-1">Description</label>
+                        <textarea id="description" name="description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Describe the pothole, its size, etc."></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="severity" class="block text-sm font-medium text-gray-600 mb-1">Severity</label>
+                        <select id="severity" name="severity" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="Low">Low</option>
+                            <option value="Medium" selected>Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div class="mb-6">
+                         <label for="potholeImage" class="block text-sm font-medium text-gray-600 mb-1">Image</label>
+                         <input type="file" id="potholeImage" name="potholeImage" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100" required>
+                    </div>
+                    <button type="submit" id="submit-btn" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-300">
+                        Submit Report
+                    </button>
+                </form>
+            </div>
+
+            <!-- Pothole Reports List Section -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h2 class="text-2xl font-semibold mb-4 border-b pb-2">Active Reports</h2>
+                <div id="loader" class="flex justify-center items-center h-48"><div class="loader"></div></div>
+                <div id="reports-container" class="space-y-4"></div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Status Update Modal -->
+    <div id="status-modal" class="modal">
+        <div class="modal-content">
+            <h3 class="text-lg font-bold mb-4">Update Status</h3>
+            <select id="modal-status-select" class="w-full p-2 border rounded-md">
+                <option value="Reported">Reported</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Fixed">Fixed</option>
+            </select>
+            <div class="mt-4 flex justify-end space-x-2">
+                <button id="modal-cancel-btn" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
+                <button id="modal-save-btn" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const reportForm = document.getElementById('report-form');
+        const reportsContainer = document.getElementById('reports-container');
+        const loader = document.getElementById('loader');
+        const submitBtn = document.getElementById('submit-btn');
+        const getLocationBtn = document.getElementById('get-location-btn');
+        const locationInput = document.getElementById('location');
+        
+        // Modal Elements
+        const statusModal = document.getElementById('status-modal');
+        const modalStatusSelect = document.getElementById('modal-status-select');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const modalSaveBtn = document.getElementById('modal-save-btn');
+        let currentEditingDocId = null;
+
+        const API_URL = 'http://localhost:3000/api';
+
+        /**
+         * Renders the list of pothole reports to the UI
+         */
+        const renderReports = (reports) => {
+            if (reports.length === 0) {
+                reportsContainer.innerHTML = `<p class="text-gray-500 text-center">No potholes reported yet. Be the first!</p>`;
+                return;
+            }
+
+            reportsContainer.innerHTML = reports.map(report => {
+                const severityColors = { 'Low': 'bg-green-100 text-green-800', 'Medium': 'bg-yellow-100 text-yellow-800', 'High': 'bg-red-100 text-red-800' };
+                const statusColors = { 'Reported': 'bg-gray-200 text-gray-800', 'In Progress': 'bg-blue-200 text-blue-800', 'Fixed': 'bg-green-200 text-green-800' };
+                
+                // --- CHANGE: Display Name and Date on the report card ---
+                return `
+                    <div class="border rounded-lg p-4 bg-gray-50">
+                        <img src="${report.imageUrl}" alt="Pothole at ${report.location}" class="w-full h-40 object-cover rounded-md mb-4">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <h3 class="font-bold text-lg">${report.location}</h3>
+                                <p class="text-sm text-gray-600 mt-1">${report.description || 'No description provided.'}</p>
+                            </div>
+                            <span class="text-xs font-semibold px-2 py-1 rounded-full ${severityColors[report.severity] || 'bg-gray-100'}">
+                                ${report.severity}
+                            </span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center text-xs text-gray-500 border-t pt-2">
+                             <span>By <span class="font-semibold">${report.reporterName || 'Anonymous'}</span> on ${report.reportDate}</span>
+                             <div class="flex items-center gap-2">
+                                <span class="font-semibold px-2 py-1 rounded-full ${statusColors[report.status] || 'bg-gray-200'}">
+                                    ${report.status}
+                                </span>
+                                <button data-id="${report.id}" class="update-status-btn text-blue-600 hover:underline">Update</button>
+                             </div>
+                        </div>
+                    </div>
+                `;
+                // --- END CHANGE ---
+            }).join('');
+        };
+
+        const fetchAndRenderReports = async () => {
+            loader.style.display = 'flex';
+            try {
+                const response = await fetch(`${API_URL}/reports`);
+                if (!response.ok) throw new Error('Failed to fetch reports');
+                const reports = await response.json();
+                renderReports(reports);
+            } catch (error) {
+                console.error("Error fetching reports:", error);
+                reportsContainer.innerHTML = `<p class="text-red-500 text-center">Could not load reports. Is the server running?</p>`;
+            } finally {
+                loader.style.display = 'none';
+            }
+        };
+
+        reportForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(reportForm);
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            try {
+                const response = await fetch(`${API_URL}/report`, {
+                    method: 'POST',
+                    body: formData,
+                });
+                if (!response.ok) throw new Error('Submission failed');
+                reportForm.reset();
+                fetchAndRenderReports();
+            } catch (error) {
+                console.error("Error adding document:", error);
+                alert("There was an error submitting your report.");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Report';
+            }
+        });
+
+        getLocationBtn.addEventListener('click', () => {
+            if (!navigator.geolocation) return alert("Geolocation is not supported.");
+            locationInput.value = "Getting location...";
+            navigator.geolocation.getCurrentPosition(position => {
+                const { latitude, longitude } = position.coords;
+                locationInput.value = `Lat: ${latitude.toFixed(5)}, Lon: ${longitude.toFixed(5)}`;
+            }, error => {
+                locationInput.value = "";
+                alert(`Error getting location: ${error.message}`);
+            });
+        });
+
+        reportsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('update-status-btn')) {
+                currentEditingDocId = e.target.dataset.id;
+                statusModal.style.display = 'block';
+            }
+        });
+
+        modalCancelBtn.addEventListener('click', () => {
+            statusModal.style.display = 'none';
+            currentEditingDocId = null;
+        });
+        
+        modalSaveBtn.addEventListener('click', async () => {
+            if (!currentEditingDocId) return;
+            const newStatus = modalStatusSelect.value;
+            modalSaveBtn.disabled = true;
+            modalSaveBtn.textContent = 'Saving...';
+            try {
+                const response = await fetch(`${API_URL}/reports/${currentEditingDocId}/status`, {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: newStatus }),
+                });
+                if (!response.ok) throw new Error('Failed to update status');
+                fetchAndRenderReports();
+            } catch (error) {
+                console.error("Error updating status:", error);
+                alert("Failed to update status.");
+            } finally {
+                modalSaveBtn.disabled = false;
+                modalSaveBtn.textContent = 'Save';
+                statusModal.style.display = 'none';
+                currentEditingDocId = null;
+            }
+        });
+        
+        window.onclick = (event) => { if (event.target == statusModal) statusModal.style.display = "none"; };
+        
+        document.addEventListener('DOMContentLoaded', fetchAndRenderReports);
+    </script>
+</body>
+</html>
