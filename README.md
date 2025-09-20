@@ -1,58 +1,66 @@
-🛣️ StreetResolve
+# 🛣️ StreetResolve
 
-StreetResolve is a simple web application that allows users to report potholes by submitting details like location, description, severity, image, reporter name, and date. The system displays all submitted reports in a dashboard where statuses can be updated (Reported → In Progress → Fixed).
+StreetResolve is a simple web application that allows users to report potholes by submitting details like location, description, severity, image, reporter name, and date. The system displays all submitted reports in a dashboard where statuses can be updated: **Reported → In Progress → Fixed**.
 
-🚀 Features
+---
 
-📍 Report potholes with location, description, severity, image, and reporter details
+## 🚀 Features
 
-🌍 Get current location using browser geolocation
+- 📍 Report potholes with location, description, severity, image, and reporter details
+- 🌍 Get current location using browser geolocation
+- 🖼️ Upload pothole images (stored in `/uploads`)
+- 📋 View all submitted reports in a clean, responsive dashboard
+- 🔄 Update report status (**Reported / In Progress / Fixed**)
+- 🟢 Backend built with **Express.js + Multer** (for file uploads)
+- 🎨 Frontend built with **HTML + TailwindCSS + Vanilla JS**
 
-🖼️ Upload pothole images (stored in /uploads)
+---
 
-📋 View all submitted reports in a clean, responsive dashboard
+## 🗂️ Project Structure
 
-🔄 Update report status (Reported / In Progress / Fixed)
-
-🟢 Backend built with Express.js + Multer (for file uploads)
-
-🎨 Frontend built with HTML + TailwindCSS + Vanilla JS
-
-🗂️ Project Structure
 .
-├── server.js       # Backend server (Express.js APIs)
-├── StreetResolve.html       # Frontend (report form + dashboard)
-├── uploads/        # Uploaded pothole images (auto-created)
-└── README.md       # Project documentation
+├── server.js # Backend server (Express.js APIs)
+├── StreetResolve.html # Frontend (report form + dashboard)
+├── uploads/ # Uploaded pothole images (auto-created)
+└── README.md # Project documentation
 
-⚙️ Installation & Setup
-1️⃣ Clone the repository
+
+
+---
+
+## ⚙️ Installation & Setup
+
+### 1️⃣ Clone the repository
+
+```bash
 git clone https://github.com/your-username/streetresolve.git
 cd streetresolve
+```
 
-2️⃣ Install dependencies
+###2️⃣ Install dependencies
+```bash
 npm install express multer cors
+```
 
-3️⃣ Start the server
+###3️⃣ Start the server
+```bash
 node server.js
+```
 
+The server runs at: http://localhost:3000
 
-Server runs at: http://localhost:3000
+###4️⃣ Open the frontend
 
-4️⃣ Open the frontend
-
-Simply open poth.html in your browser.
+Simply open StreetResolve.html in your browser.
 Make sure the backend (server.js) is running so the form can submit reports.
 
-📡 API Endpoints
-GET /api/reports
+###📡 API Endpoints
 
+GET /api/reports
 Retrieve all pothole reports.
 
 POST /api/report
-
 Submit a new pothole report.
-
 Requires multipart/form-data with fields:
 
 location (string)
@@ -68,14 +76,9 @@ reportDate (date)
 potholeImage (file, required)
 
 PATCH /api/reports/:id/status
-
 Update the status of a specific report (Reported, In Progress, Fixed).
 
-📸 Screenshots
-
-(Add your own screenshots of the form and dashboard here)
-
-📌 Future Improvements
+###📌 Future Improvements
 
 ✅ Add database support (MongoDB/Postgres) instead of in-memory storage
 
@@ -83,8 +86,7 @@ Update the status of a specific report (Reported, In Progress, Fixed).
 
 ✅ Deployment to cloud (Heroku/Render/Netlify + Vercel)
 
-👨‍💻 Author
+###👨‍💻 Author
 
-Atharv Shirke
-
-Developed with ❤️ under the project name StreetResolve.
+-Atharv Shirke
+-Developed with ❤️ under the project name StreetResolve.
