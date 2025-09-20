@@ -37,24 +37,24 @@ git clone https://github.com/your-username/streetresolve.git
 cd streetresolve
 ```
 
-###2️⃣ Install dependencies
+### 2️⃣ Install dependencies
 ```bash
 npm install express multer cors
 ```
 
-###3️⃣ Start the server
+### 3️⃣ Start the server
 ```bash
 node server.js
 ```
 
 The server runs at: http://localhost:3000
 
-###4️⃣ Open the frontend
+### 4️⃣ Open the frontend
 
 Simply open StreetResolve.html in your browser.
 Make sure the backend (server.js) is running so the form can submit reports.
 
-###📡 API Endpoints
+### 📡 API Endpoints
 
 GET /api/reports
 Retrieve all pothole reports.
@@ -78,7 +78,7 @@ potholeImage (file, required)
 PATCH /api/reports/:id/status
 Update the status of a specific report (Reported, In Progress, Fixed).
 
-###📌 Future Improvements
+### 📌 Future Improvements
 
 ✅ Add database support (MongoDB/Postgres) instead of in-memory storage
 
