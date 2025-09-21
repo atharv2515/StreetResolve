@@ -60,26 +60,26 @@ Make sure the backend (server.js) is running so the form can submit reports.
 
 ### 📡 API Endpoints
 
-GET /api/reports
+-GET /api/reports
 Retrieve all pothole reports.
 
-POST /api/report
+-POST /api/report
 Submit a new pothole report.
 Requires multipart/form-data with fields:
 
-location (string)
+-location (string)
 
-description (string, optional)
+-description (string, optional)
 
-severity (Low/Medium/High)
+-severity (Low/Medium/High)
 
-reporterName (string)
+-reporterName (string)
 
-reportDate (date)
+-reportDate (date)
 
-potholeImage (file, required)
+-potholeImage (file, required)
 
-PATCH /api/reports/:id/status
+-PATCH /api/reports/:id/status
 Update the status of a specific report (Reported, In Progress, Fixed).
 
 ### 📌 Future Improvements
