@@ -90,7 +90,7 @@ Update the status of a specific report (Reported, In Progress, Fixed).
 
 ✅ Deployment to cloud (Heroku/Render/Netlify + Vercel)
 
-###👨‍💻 Author
+### 👨‍💻 Author
 
 -Atharv Shirke
 -Developed with ❤️ under the project name StreetResolve.
