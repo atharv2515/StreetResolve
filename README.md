@@ -60,10 +60,10 @@ Make sure the backend (server.js) is running so the form can submit reports.
 
 ### 📡 API Endpoints
 
--GET /api/reports
+- GET /api/reports
 Retrieve all pothole reports.
 
--POST /api/report
+- POST /api/report
 Submit a new pothole report.
 Requires multipart/form-data with fields:
 
